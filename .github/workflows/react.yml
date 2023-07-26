@@ -49,8 +49,11 @@ jobs:
           # Wait for deployment completion
           aws deploy wait deployment-successful --deployment-id ${{ steps.deploy.outputs.deployment-id }}
 
+          host_name=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=Web-simple" --query "Reservations[].Instances[].PublicDnsName | [0]" --output text)
+          url="http://$host_name"
+
           # Perform front page availability test
-          response=$(curl -I -s http://ec2-18-141-203-95.ap-southeast-1.compute.amazonaws.com)
+          response=$(curl -I -s "$url")
           if [[ "$response" != *"200 OK"* ]]; then
             echo "Front page availability test failed. Deployment may have issues."
             exit 1
