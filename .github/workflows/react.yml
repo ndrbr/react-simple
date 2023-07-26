@@ -39,4 +39,21 @@ jobs:
         run: aws s3 cp ./deploy.zip s3://myaws-deployments/
 
       - name: Deploy to EC2
-        run: aws deploy create-deployment --application-name React-simple --deployment-group-name Web-simple-deploygroup --s3-location bucket=myaws-deployments,key=deploy.zip,bundleType=zip
+        id: deploy
+        run: |
+          deployment_id=$(aws deploy create-deployment --application-name React-simple --deployment-group-name Web-simple-deploygroup --s3-location bucket=myaws-deployments,key=deploy.zip,bundleType=zip --query "deploymentId" --output text)
+          echo "::set-output name=deployment-id::$deployment_id"
+
+      - name: Post-Deployment Validation
+        run: |
+          # Wait for deployment completion
+          aws deploy wait deployment-successful --deployment-id ${{ steps.deploy.outputs.deployment-id }}
+
+          # Perform front page availability test
+          response=$(curl -I -s http://ec2-18-141-203-95.ap-southeast-1.compute.amazonaws.com)
+          if [[ "$response" != *"200 OK"* ]]; then
+            echo "Front page availability test failed. Deployment may have issues."
+            exit 1
+          else
+            echo "Front page availability test passed. Deployment is successful."
+          fi
