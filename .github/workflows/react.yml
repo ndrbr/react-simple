@@ -26,7 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-      - run: (cd build ; zip -r ../deploy.zip .)
+      - run: zip -r deploy.zip . -x "node_modules/*" -x "*.git*"
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
