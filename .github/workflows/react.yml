@@ -14,11 +14,19 @@ permissions:
   contents: read
 
 jobs:
-  AssumeRoleAndCallIdentity:
+  build-test-package:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: (cd build ; zip -r ../deploy.zip .)
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -31,16 +39,3 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
-
-  build-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
