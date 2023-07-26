@@ -42,7 +42,7 @@ jobs:
         id: deploy
         run: |
           deployment_id=$(aws deploy create-deployment --application-name React-simple --deployment-group-name Web-simple-deploygroup --s3-location bucket=myaws-deployments,key=deploy.zip,bundleType=zip --query "deploymentId" --output text)
-          echo "{deployment-id}={$deployment_id}" >> $GITHUB_OUTPUT
+          echo "deployment-id=$deployment_id" >> $GITHUB_OUTPUT
 
       - name: Post-Deployment Validation
         run: |
