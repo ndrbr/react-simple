@@ -1,5 +1,22 @@
 version: 0.0
 os: linux
 files:
-  - source: ./build
-    destination: /usr/share/nginx/html
+  - source: /app.js
+    destination: /home/ec2-user/node-website
+  - source: /package.json
+    destination: /home/ec2-user/node-website
+  - source: /build/
+    destination: /home/ec2-user/node-website/build
+hooks:
+  AfterInstall:
+    - location: scripts/install_node
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server
+      timeout: 300
+      runas: root
