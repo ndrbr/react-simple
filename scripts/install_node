@@ -1,4 +1,7 @@
 #!/bin/bash
 cd /home/ec2-user/node-website
+
+# prevents EC2 freezes on t2.micro
 jq 'del(.devDependencies)' package.json > package.json.tmp && mv -f package.json.tmp package.json
+
 npm install
