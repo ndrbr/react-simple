@@ -1,4 +1,4 @@
 #!/bin/bash
 cd /home/ec2-user/node-website
-export NODE_ENV=production
+jq 'del(.devDependencies)' package.json > package.json.tmp && mv -f package.json.tmp package.json
 npm install
