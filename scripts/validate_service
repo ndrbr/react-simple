@@ -1,0 +1,11 @@
+#!/bin/bash
+url="http://localhost:3000"
+
+# Perform front page availability test
+response=$(curl -I -s "$url")
+if [[ "$response" != *"200 OK"* ]]; then
+  echo "Front page availability test failed. Deployment may have issues."
+  exit 1
+else
+  echo "Front page availability test passed. Deployment is successful."
+fi
