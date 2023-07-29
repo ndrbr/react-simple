@@ -5,6 +5,8 @@ files:
     destination: /home/ec2-user/node-website
   - source: /package.json
     destination: /home/ec2-user/node-website
+  - source: /package-lock.json
+    destination: /home/ec2-user/node-website
   - source: /build/
     destination: /home/ec2-user/node-website/build
 hooks:

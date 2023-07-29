@@ -1,3 +1,4 @@
 #!/bin/bash
 cd /home/ec2-user/node-website
-npm install --production
+export NODE_ENV=production
+npm install
